@@ -7,7 +7,8 @@ void sum_steps(){
 }
 
 /**************************************************************************/
-void center(unsigned int t){
+
+void center(unsigned long t){
   Serial.print("millis(): "); Serial.print(millis()); 
   Serial.print("    t: "); Serial.println(t);
   if(millis() < t) {delay(t - millis());}
@@ -22,11 +23,11 @@ void center(unsigned int t){
   sum_steps();
   count = count + 1;
   standard = pause*count + initial_delay;
-  x_current = 0; y_current = 0; a_current = 0;
+  x_hold = 90; y_hold = 90; a_hold = 0;
   
-  Serial.print("x: "); Serial.print(x_current); 
-  Serial.print("   y: "); Serial.print(y_current); 
-  Serial.print("   a: "); Serial.println(a_current); 
+  Serial.print("x: "); Serial.print(x_hold); 
+  Serial.print("   y: "); Serial.print(y_hold); 
+  Serial.print("   a: "); Serial.println(a_hold); 
   Serial.print("   count: "); Serial.println(count); Serial.println("");
 }
 
@@ -41,12 +42,11 @@ void stepper_position(int a) {
     delayMicroseconds(n);
   }
   sum_steps();
-
 }
 
 /**************************************************************************/
 
-void entry(int x, int y, int a, unsigned int t) {
+void entry(int x, int y, int a, unsigned long t) {
   Serial.print("millis(): "); Serial.print(millis()); 
   Serial.print("   t: "); Serial.println(t);
   if(millis() < t) {delay(t - millis());}
@@ -55,11 +55,10 @@ void entry(int x, int y, int a, unsigned int t) {
   stepper_position(a);
   count = count + 1;
   standard = pause*count + initial_delay;
-  x_current = x; y_current = y; a_current = a;
+  x_hold = x; y_hold = y; a_hold = a;
   
-  Serial.print("x: "); Serial.print(x_current); 
-  Serial.print("   y: "); Serial.print(y_current); 
-  Serial.print("   a: "); Serial.println(a_current); 
+  Serial.print("x: "); Serial.print(x_hold); 
+  Serial.print("   y: "); Serial.print(y_hold); 
+  Serial.print("   a: "); Serial.println(a_hold); 
   Serial.print("   count: "); Serial.println(count); Serial.println("");
-  
 }

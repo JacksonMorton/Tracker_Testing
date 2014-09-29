@@ -10,15 +10,15 @@
  int i;
  int n = 1000; // Set the speed of the stepper motor (microsecond delay between each step).
  bool outputDir = false;
- int initial_delay = 2000; // Initial delay time after program is initialized (milliseconds).
- int count = 0;
- int pause = 1000; 
+ unsigned long initial_delay = 2000; // Initial delay time after program is initialized (milliseconds).
+ unsigned long count = 0;
+ unsigned long pause = 1000; 
  unsigned long time = millis();
- unsigned int move_on; unsigned int standard;
+ unsigned long move_on; unsigned long standard;
 
- int x_current = 90;
- int y_current = 90;
- int a_current = 0;
+ int x_hold = 90;
+ int y_hold = 90;
+ int a_hold = 0;
 
  void setup() {
   servo1.attach(9,1000,2000);
