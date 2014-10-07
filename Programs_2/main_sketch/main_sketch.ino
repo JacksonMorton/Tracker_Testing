@@ -12,15 +12,21 @@
  bool outputDir = false;
  unsigned long initial_delay = 2000; // Initial delay time after program is initialized (milliseconds).
  unsigned long count = 0;
- unsigned long pause = 1000; 
+ unsigned long pause = 2000; 
  unsigned long time = millis();
  unsigned long move_on; unsigned long standard;
+ //unsigned long minutes = 0; int seconds = 0;
+ uint8_t feedbackPin1 = A0;
+ uint8_t feedbackPin2 = A1;
 
  int x_hold = 90;
  int y_hold = 90;
  int a_hold = 0;
+ int rand_x; int rand_y; int rand_a;
 
  void setup() {
+  randomSeed(analogRead(5));
+   
   servo1.attach(9,1000,2000);
   servo2.attach(10,1000,2000);
   pinMode(dir, OUTPUT);
@@ -38,6 +44,6 @@
  
  void loop() {
    
-   program2();
+   program3();
   
  }

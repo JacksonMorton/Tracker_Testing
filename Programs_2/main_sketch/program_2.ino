@@ -18,13 +18,13 @@ void program2() {
  entry(135,45,0,standard);
  center(standard); 
  
- entry(90,90,320,standard);
- entry(90,90,-320,standard);
+ entry(90,90,400,standard);
+ entry(90,90,-400,standard);
  center(standard);
  
- entry(45,45,320,standard);
+ entry(45,45,400,standard);
  entry(135,135,0,standard);
- entry(135,45,-320,standard);
+ entry(135,45,-400,standard);
  entry(45,135,0,standard);
  center(standard);
  
