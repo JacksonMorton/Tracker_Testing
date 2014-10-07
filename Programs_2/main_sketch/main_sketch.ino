@@ -7,7 +7,8 @@
 
  Servo servo1;
  Servo servo2;
- int i;
+ bool stutter_on = true;
+ int i; int z; int u;
  int n = 1000; // Set the speed of the stepper motor (microsecond delay between each step).
  bool outputDir = false;
  unsigned long initial_delay = 2000; // Initial delay time after program is initialized (milliseconds).
@@ -23,6 +24,9 @@
  int y_hold = 90;
  int a_hold = 0;
  int rand_x; int rand_y; int rand_a;
+
+ int x_val; int y_val;
+ int stutters_x = 0; int stutters_y = 0; int max_stutters = 0;
 
  void setup() {
   randomSeed(analogRead(5));
@@ -40,6 +44,7 @@
   standard = move_on;
   Serial.begin(9600);
   delay(initial_delay);
+  
  }
  
  void loop() {
