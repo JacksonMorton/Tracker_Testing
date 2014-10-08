@@ -1,32 +1,48 @@
  #include <Servo.h>
+ 
+ /******* User Defined Values  *******/
+ 
+  bool stutter_on = true;  /* Choose whether the servo motors move directly to the desired position or
+                              move there in several discrete steps. */
+  bool feedback_on = true; // Choose to show or hide feedback data from the servo motors on the serial monitor.
+  int n = 1000; // Set the speed of the stepper motor (microsecond delay between each step).
+  unsigned long initial_delay = 2000; // Initial delay time after program is initialized (milliseconds).
+  unsigned long pause = 6000; // The amount of time (milliseconds) between each eye movement.
+  
+ /************************************/ 
 
  int dir = 2; // The Arduino pin controlling stepper (alpha) direction.
  int steps = 3; // The Arduino pin controlling the # of steps taken by the stepper motor.
  int netSteps;  /* The direction specific sum of the number of steps the stepper has taken.
                       Steps when dir = HIGH are positive; steps when dir = LOW are negative. */
-
- Servo servo1;
- Servo servo2;
- bool stutter_on = true;
- int i; int z; int u;
- int n = 1000; // Set the speed of the stepper motor (microsecond delay between each step).
  bool outputDir = false;
- unsigned long initial_delay = 2000; // Initial delay time after program is initialized (milliseconds).
+ 
+ Servo servo1; 
+ Servo servo2;
+ 
+ int i; int z; int u;
+
  unsigned long count = 0;
- unsigned long pause = 2000; 
  unsigned long time = millis();
  unsigned long move_on; unsigned long standard;
- //unsigned long minutes = 0; int seconds = 0;
- uint8_t feedbackPin1 = A0;
+ 
+ int feedback1 = 0; 
+ int feedback2 = 0;
+ uint8_t feedbackPin1 = A0; 
  uint8_t feedbackPin2 = A1;
-
- int x_hold = 90;
- int y_hold = 90;
+ 
+ int x_hold = 90; 
+ int y_hold = 90; 
  int a_hold = 0;
- int rand_x; int rand_y; int rand_a;
+ 
+ int rand_x; 
+ int rand_y; 
+ int rand_a;
 
  int x_val; int y_val;
  int stutters_x = 0; int stutters_y = 0; int max_stutters = 0;
+
+ /************************************/ 
 
  void setup() {
   randomSeed(analogRead(5));
