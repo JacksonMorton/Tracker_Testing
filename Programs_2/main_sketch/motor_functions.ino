@@ -9,8 +9,8 @@ void sum_steps(){
 /**************************************************************************/
 
 void center(unsigned long t){
-  Serial.print("millis(): "); Serial.print((millis()/1000)/60); Serial.print(":"); Serial.print((millis()/1000)%60);
-  if ((millis()/1000)%60 < 10) {Serial.print("0");}
+  Serial.print("millis(): "); Serial.print((millis()/1000)/60); Serial.print(":"); 
+  if ((millis()/1000)%60 < 10) {Serial.print("0");}; Serial.print((millis()/1000)%60);
   Serial.print("   t: "); Serial.print((t/1000)/60); Serial.print(":"); 
   if ((t/1000)%60 < 10) {Serial.print((t/1000)%60); Serial.println("0");} else {Serial.println((t/1000)%60);}
   if(millis() < t) {delay(t - millis());}
@@ -50,10 +50,10 @@ void stepper_position(int a) {
 /**************************************************************************/
 
 void entry(int x, int y, int a, unsigned long t) {
-  Serial.print("millis(): "); Serial.print((millis()/1000)/60); Serial.print(":"); Serial.print((millis()/1000)%60);
-  if ((millis()/1000)%60 < 10) {Serial.print("0");}
-  Serial.print("   t: "); Serial.print((t/1000)/60); Serial.print(":"); 
-  if ((t/1000)%60 < 10) {Serial.print((t/1000)%60); Serial.println("0");} else {Serial.println((t/1000)%60);}
+  Serial.print("millis(): "); Serial.print((millis()/1000)/60); Serial.print(":"); 
+  if ((millis()/1000)%60 < 10) {Serial.print("0");}; Serial.print((millis()/1000)%60);
+  Serial.print("   t: "); Serial.print((t/1000)/60); Serial.print(":");
+  if ((t/1000)%60 < 10) {Serial.print("0");}; {Serial.println((t/1000)%60);}
   if(millis() < t) {delay(t - millis());}
   
     stepper_position(a);
@@ -93,7 +93,7 @@ void entry(int x, int y, int a, unsigned long t) {
     if (stutters_x - stutters_y >= 0) {max_stutters = stutters_x;}
       else {max_stutters = stutters_y;}
     
-      for (z=0; z<max_stutters; z++) {
+      for (z=0; z < max_stutters; z++) {
         if (stutters_x >= z) {servo1.write(x_hold+z*((x_val-x_hold)/stutters_x)); }
         if (stutters_y >= z) {servo2.write(y_hold+z*((y_val-y_hold)/stutters_y)); }
         delay(200);}
