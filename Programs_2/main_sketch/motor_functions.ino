@@ -31,7 +31,10 @@ void center(unsigned long t){
   Serial.print("x: "); Serial.print(x_hold); 
   Serial.print("   y: "); Serial.print(y_hold); 
   Serial.print("   a: "); Serial.println(a_hold); 
-  Serial.print("   count: "); Serial.println(count); Serial.println("");
+  Serial.print("   count: "); Serial.println(count); 
+  if (feedback_on) {feedback();}
+  delay(2000); if (feedback_on) {feedback();}
+  Serial.println("");
 }
 
 /**************************************************************************/
@@ -62,9 +65,7 @@ void entry(int x, int y, int a, unsigned long t) {
   if (stutter_on) {stutter();}
   servo1.write(x);
   servo2.write(y);
-          
 
-  
   count = count + 1;
   standard = pause*count + initial_delay;
   x_hold = x; y_hold = y; a_hold = a;
@@ -73,7 +74,10 @@ void entry(int x, int y, int a, unsigned long t) {
   Serial.print("x: "); Serial.print(x_hold); 
   Serial.print("   y: "); Serial.print(y_hold); 
   Serial.print("   a: "); Serial.println(a_hold); 
-  Serial.print("   count: "); Serial.println(count); Serial.println("");
+  Serial.print("   count: "); Serial.println(count); 
+  if (feedback_on) {feedback();}
+  delay(2000); if (feedback_on) {feedback();}
+  Serial.println("");
 }  
  
 /**************************************************************************/ 
@@ -103,9 +107,34 @@ void entry(int x, int y, int a, unsigned long t) {
 
   void feedback() {
     feedback1 = analogRead(feedbackPin1); feedback2 = analogRead(feedbackPin2);
-    Serial.print("servo1 input: "); Serial.print(x_val); Serial.print(" degrees");
-    Serial.print("servo1 feedback: "); Serial.print(feedback1); Serial.println(" degrees");
-    Serial.print("servo2 input: "); Serial.print(y_val); Serial.print(" degrees");
-    Serial.print("servo2 feedback: "); Serial.print(feedback2); Serial.println(" degrees");
+    feedback1_map = map(feedback1, 259, 356, 45, 135); feedback2_map = map(feedback2, 245, 340, 45, 135);
+    Serial.print("servo1 feedback: "); Serial.print(feedback1); Serial.println(" (This number is between 259 and 356.)");
+    Serial.print("servo1 mapped feedback: "); Serial.print(feedback1_map); Serial.println(" degrees");
+    Serial.print("servo2 feedback: "); Serial.print(feedback2); Serial.println(" (This number is between 245 and 340.)");
+    Serial.print("servo2 mapped feedback: "); Serial.print(feedback2_map); Serial.println(" degrees");
+    
   }
+
+/**************************************************************************/
+
+void joystick() {
+   x_value = analogRead(x_out);
+   y_value = analogRead(y_out);
+   a_value = analogRead(a_out);
+   
+   x_servo = map(x_value,0,1016,135,45);
+   y_servo = map(y_value,0,1016,135,45);
+   a_stepper = map(a_value,0,1021,-400,400);
+   
+   servo1.write(x_servo); servo2.write(y_servo);
+   
+   Serial.print("x_value: "); Serial.println(x_servo);
+   Serial.print("y_value: "); Serial.println(y_servo);
+   Serial.print("a_value: "); Serial.println(a_stepper);
+   Serial.print("millis() "); Serial.println(millis());
+   Serial.println("");
+   
+   //delay(2000);
+  }
+  
 

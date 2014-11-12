@@ -17,6 +17,10 @@
  void loop() {
    delay(2000);
    
+   servo1.write(90); servo2.write(90);
+   
+   delay(60000);
+   
    for(i=9; i<28; i++){
    n = 5*i;
    servo1.write(n); servo2.write(n); 
@@ -28,8 +32,6 @@
    Serial.print("Angle: "); Serial.print(n); Serial.print("   ");
    Serial.print("servo1 Input: "); Serial.print(feedback1); Serial.print("     ");
    Serial.print("servo2 Input: "); Serial.println(feedback2);
-   
-   
    }
-   
+   Serial.println(""); 
  }
