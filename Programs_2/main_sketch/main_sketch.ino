@@ -50,6 +50,7 @@
  int potentiometer_power = 4;
  int x_servo; int y_servo; int a_stepper;
  int x_value; int y_value; int a_value;
+ int mode_switch = 12; boolean manual;
 
  /************************************/ 
 
@@ -63,6 +64,7 @@
   
   pinMode(joystick_power, OUTPUT);
   pinMode(potentiometer_power, OUTPUT);
+  pinMode(mode_switch, INPUT);
   digitalWrite(joystick_power, HIGH);
   digitalWrite(potentiometer_power, HIGH);
  

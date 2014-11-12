@@ -35,6 +35,8 @@ void center(unsigned long t){
   if (feedback_on) {feedback();}
   delay(2000); if (feedback_on) {feedback();}
   Serial.println("");
+  
+  check_mode();
 }
 
 /**************************************************************************/
@@ -78,6 +80,8 @@ void entry(int x, int y, int a, unsigned long t) {
   if (feedback_on) {feedback();}
   delay(2000); if (feedback_on) {feedback();}
   Serial.println("");
+  
+  check_mode(); 
 }  
  
 /**************************************************************************/ 
@@ -105,15 +109,22 @@ void entry(int x, int y, int a, unsigned long t) {
   
 /**************************************************************************/
 
-  void feedback() {
-    feedback1 = analogRead(feedbackPin1); feedback2 = analogRead(feedbackPin2);
-    feedback1_map = map(feedback1, 259, 356, 45, 135); feedback2_map = map(feedback2, 245, 340, 45, 135);
-    Serial.print("servo1 feedback: "); Serial.print(feedback1); Serial.println(" (This number is between 259 and 356.)");
-    Serial.print("servo1 mapped feedback: "); Serial.print(feedback1_map); Serial.println(" degrees");
-    Serial.print("servo2 feedback: "); Serial.print(feedback2); Serial.println(" (This number is between 245 and 340.)");
-    Serial.print("servo2 mapped feedback: "); Serial.print(feedback2_map); Serial.println(" degrees");
-    
-  }
+ void feedback() {
+   feedback1 = analogRead(feedbackPin1); feedback2 = analogRead(feedbackPin2);
+   feedback1_map = map(feedback1, 259, 356, 45, 135); feedback2_map = map(feedback2, 245, 340, 45, 135);
+   Serial.print("servo1 feedback: "); Serial.print(feedback1); Serial.println(" (This number is between 259 and 356.)");
+   Serial.print("servo1 mapped feedback: "); Serial.print(feedback1_map); Serial.println(" degrees");
+   Serial.print("servo2 feedback: "); Serial.print(feedback2); Serial.println(" (This number is between 245 and 340.)");
+   Serial.print("servo2 mapped feedback: "); Serial.print(feedback2_map); Serial.println(" degrees");
+   
+ }
+
+/**************************************************************************/
+
+void check_mode() {
+  manual = digitalRead(mode_switch);
+  while (manual) {joystick();}
+}
 
 /**************************************************************************/
 
@@ -124,15 +135,21 @@ void joystick() {
    
    x_servo = map(x_value,0,1016,135,45);
    y_servo = map(y_value,0,1016,135,45);
-   a_stepper = map(a_value,0,1021,-400,400);
+   a_stepper = map(a_value,0,1021,400,-400);
    
    servo1.write(x_servo); servo2.write(y_servo);
+   stepper_position(a_stepper);
+   
    
    Serial.print("x_value: "); Serial.println(x_servo);
    Serial.print("y_value: "); Serial.println(y_servo);
    Serial.print("a_value: "); Serial.println(a_stepper);
    Serial.print("millis() "); Serial.println(millis());
    Serial.println("");
+   
+   netSteps = a_stepper;
+   manual = digitalRead(mode_switch);
+   Serial.print("mode: "); Serial.println(manual);
    
    //delay(2000);
   }
