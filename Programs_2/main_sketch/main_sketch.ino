@@ -54,6 +54,8 @@
  int x_value; int y_value; int a_value;
  int mode_switch = 12; boolean manual; boolean lastMode;
  boolean initialCheck = true;
+ int powerToMotors = 8; boolean motorsOn; boolean lastMotorsOn = true;
+ int saveNetSteps = 0;
  int extraSteps;
 
  /************************************/ 
@@ -69,6 +71,7 @@
   pinMode(joystick_power, OUTPUT);
   pinMode(potentiometer_power, OUTPUT);
   pinMode(mode_switch, INPUT);
+  pinMode(powerToMotors, INPUT);
   digitalWrite(joystick_power, HIGH);
   digitalWrite(potentiometer_power, HIGH);
   lastMode = digitalRead(mode_switch);
@@ -79,6 +82,7 @@
   netSteps = 0;
   move_on = pause*count + initial_delay;
   standard = move_on;
+
   
   Serial.begin(9600);
   delay(initial_delay);
