@@ -9,6 +9,9 @@ void sum_steps(){
 /**************************************************************************/
 
 void center(unsigned long t){
+  
+  check_mode();
+  
   Serial.print("millis(): "); Serial.print((millis()/1000)/60); Serial.print(":"); 
   if ((millis()/1000)%60 < 10) {Serial.print("0");}; Serial.print((millis()/1000)%60);
   Serial.print("   t: "); Serial.print((t/1000)/60); Serial.print(":"); 
@@ -33,17 +36,18 @@ void center(unsigned long t){
   Serial.print("   a: "); Serial.println(a_hold); 
   Serial.print("   count: "); Serial.println(count); 
   if (feedback_on) {feedback();}
-  delay(2000); if (feedback_on) {feedback();}
+  //delay(2000); if (feedback_on) {feedback();}
   Serial.println("");
   
-  check_mode();
 }
 
 /**************************************************************************/
 
 void stepper_position(int a) {
+  
   if(a < netSteps) {digitalWrite(dir,LOW); outputDir = false;}
     else {digitalWrite(dir, HIGH); outputDir = true;}
+    
   for(i=0; i < abs(netSteps-a); i++) {
     digitalWrite(steps,LOW);
     digitalWrite(steps,HIGH);
@@ -55,6 +59,9 @@ void stepper_position(int a) {
 /**************************************************************************/
 
 void entry(int x, int y, int a, unsigned long t) {
+  
+  check_mode();
+  
   Serial.print("millis(): "); Serial.print((millis()/1000)/60); Serial.print(":"); 
   if ((millis()/1000)%60 < 10) {Serial.print("0");}; Serial.print((millis()/1000)%60);
   Serial.print("   t: "); Serial.print((t/1000)/60); Serial.print(":");
@@ -78,10 +85,9 @@ void entry(int x, int y, int a, unsigned long t) {
   Serial.print("   a: "); Serial.println(a_hold); 
   Serial.print("   count: "); Serial.println(count); 
   if (feedback_on) {feedback();}
-  delay(2000); if (feedback_on) {feedback();}
+  //delay(2000); if (feedback_on) {feedback();}
   Serial.println("");
-  
-  check_mode(); 
+   
 }  
  
 /**************************************************************************/ 
@@ -123,12 +129,44 @@ void entry(int x, int y, int a, unsigned long t) {
 
 void check_mode() {
   manual = digitalRead(mode_switch);
-  while (manual) {joystick();}
-}
+  
+  if (lastMode != manual) {
+    
+    servo1.write(90); servo2.write(90);
+    if(netSteps > 0) {digitalWrite(dir,LOW); outputDir = false;}
+      else {digitalWrite(dir,HIGH); outputDir = true;}
+    for(i=0; i < abs(netSteps); i++){
+      digitalWrite(steps,LOW);
+      digitalWrite(steps,HIGH);
+      delayMicroseconds(n);
+    }
+    sum_steps();
+    lastMode = manual; n = 500;
+  }
+  
+  Serial.print("mode: "); Serial.println(manual);
+  
+  while (manual) {
+  joystick();}
+  
+  if (lastMode != manual) { 
+    servo1.write(90); servo2.write(90);
+    if(netSteps > 0) {digitalWrite(dir,LOW); outputDir = false;}
+      else {digitalWrite(dir,HIGH); outputDir = true;}
+    for(i=0; i < abs(netSteps); i++){
+      digitalWrite(steps,LOW);
+      digitalWrite(steps,HIGH);
+      delayMicroseconds(n); }
+    sum_steps();
+    lastMode = manual; n = 1000;
+   }
+   Serial.print("netSteps: "); Serial.println(netSteps);
+ }
 
 /**************************************************************************/
 
 void joystick() {
+  
    x_value = analogRead(x_out);
    y_value = analogRead(y_out);
    a_value = analogRead(a_out);
@@ -138,8 +176,9 @@ void joystick() {
    a_stepper = map(a_value,0,1021,400,-400);
    
    servo1.write(x_servo); servo2.write(y_servo);
+   //extraSteps = a_stepper % smoothingConstant;
+   //stepper_position(a_stepper - extraSteps); 
    stepper_position(a_stepper);
-   
    
    Serial.print("x_value: "); Serial.println(x_servo);
    Serial.print("y_value: "); Serial.println(y_servo);
@@ -147,9 +186,8 @@ void joystick() {
    Serial.print("millis() "); Serial.println(millis());
    Serial.println("");
    
-   netSteps = a_stepper;
    manual = digitalRead(mode_switch);
-   Serial.print("mode: "); Serial.println(manual);
+   Serial.print("mode: "); Serial.print(manual); Serial.print("     netSteps: "); Serial.println(netSteps);
    
    //delay(2000);
   }

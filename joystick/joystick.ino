@@ -40,6 +40,6 @@ void loop() {
  Serial.print("millis() "); Serial.println(millis());
  Serial.println("");
  
- delay(2000);
+ //delay(2000);
 }
 
