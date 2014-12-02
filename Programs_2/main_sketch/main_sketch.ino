@@ -7,7 +7,7 @@
   bool feedback_on = true; // Choose to show or hide feedback data from the servo motors on the serial monitor.
   int n = 1000; // Set the speed of the stepper motor (microsecond delay between each step).
   unsigned long initial_delay = 2000; // Initial delay time after program is initialized (milliseconds).
-  unsigned long pause = 2000; // The amount of time (milliseconds) between each eye movement.
+  unsigned long pause = 3000; // The amount of time (milliseconds) between each eye movement.
   int smoothingConstant = 10; // As smoothingConstant increases, joystick control of the a-direction becomes 
                               // smoother but less precise.
   

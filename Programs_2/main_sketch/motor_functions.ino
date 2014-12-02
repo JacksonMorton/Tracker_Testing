@@ -12,11 +12,17 @@
    
    check_mode(); motors_on_off();
    
+   // Print the value of millis in terms of minuts and seconds. (ex. If millis() = 5145, display "0:05".) 
    Serial.print("millis(): "); Serial.print((millis()/1000)/60); Serial.print(":"); 
    if ((millis()/1000)%60 < 10) {Serial.print("0");}; Serial.print((millis()/1000)%60);
+   
+   // Print the value of t in terms of minutes and seconds.
    Serial.print("   t: "); Serial.print((t/1000)/60); Serial.print(":"); 
-   if ((t/1000)%60 < 10) {Serial.print((t/1000)%60); Serial.println("0");} else {Serial.println((t/1000)%60);}
+   if ((t/1000)%60 < 10) {Serial.print("0");}; {Serial.println((t/1000)%60);}
+   
+   // t is the minimum time at which the command will execute.  If millis() < t, the code will delay until millis() = t.
    if(millis() < t) {delay(t - millis());}
+   
    servo1.write(90); servo2.write(90);
    if(netSteps > 0) {digitalWrite(dir,LOW); outputDir = false;}
      else {digitalWrite(dir,HIGH); outputDir = true;}
@@ -33,7 +39,7 @@
    
    Serial.print("x: "); Serial.print(x_hold); 
    Serial.print("   y: "); Serial.print(y_hold); 
-   Serial.print("   a: "); Serial.println(a_hold); 
+   Serial.print("   a: "); Serial.print(a_hold); 
    Serial.print("   count: "); Serial.println(count); 
    if (feedback_on) {feedback();}
    //delay(2000); if (feedback_on) {feedback();}
@@ -60,13 +66,19 @@
 
  void entry(int x, int y, int a, unsigned long t) {
    
-   check_mode(); motors_on_off(); //Serial.print("lastMotorsOn: "); Serial.print(lastMotorsOn); Serial.print("   motorsOn: "); Serial.println(motorsOn);
+   check_mode();  motors_on_off();//Serial.print("lastMotorsOn: "); Serial.print(lastMotorsOn); Serial.print("   motorsOn: "); Serial.println(motorsOn);
   
+   // Print the value of millis in terms of minuts and seconds. (ex. If millis() = 5145, display "0:05".)   
    Serial.print("millis(): "); Serial.print((millis()/1000)/60); Serial.print(":"); 
    if ((millis()/1000)%60 < 10) {Serial.print("0");}; Serial.print((millis()/1000)%60);
+   
+   // Print the value of t in terms of minutes and seconds.
    Serial.print("   t: "); Serial.print((t/1000)/60); Serial.print(":");
    if ((t/1000)%60 < 10) {Serial.print("0");}; {Serial.println((t/1000)%60);}
-   if(millis() < t) {delay(t - millis());}
+   
+   // t is the minimum time at which the command will execute.  If millis() < t, the code will delay until millis() = t.
+   if(millis() <= t) {delay(t - millis());}
+   //else {count = ((standard - initial_delay) / pause) - 1;}
   
    stepper_position(a);
   
@@ -82,7 +94,7 @@
   
    Serial.print("x: "); Serial.print(x_hold); 
    Serial.print("   y: "); Serial.print(y_hold); 
-   Serial.print("   a: "); Serial.println(a_hold); 
+   Serial.print("   a: "); Serial.print(a_hold); 
    Serial.print("   count: "); Serial.println(count); 
    if (feedback_on) {feedback();}
    //delay(2000); if (feedback_on) {feedback();}
@@ -118,11 +130,12 @@
   void feedback() {
     feedback1 = analogRead(feedbackPin1); feedback2 = analogRead(feedbackPin2);
     feedback1_map = map(feedback1, 259, 356, 45, 135); feedback2_map = map(feedback2, 245, 340, 45, 135);
+    Serial.println("");
     Serial.print("servo1 feedback: "); Serial.print(feedback1); Serial.println(" (This number is between 259 and 356.)");
     Serial.print("servo1 mapped feedback: "); Serial.print(feedback1_map); Serial.println(" degrees");
     Serial.print("servo2 feedback: "); Serial.print(feedback2); Serial.println(" (This number is between 245 and 340.)");
-    Serial.print("servo2 mapped feedback: "); Serial.print(feedback2_map); Serial.println(" degrees");
-   
+    Serial.print("servo2 mapped feedback: "); Serial.print(feedback2_map); Serial.println(" degrees"); 
+    Serial.println(""); Serial.println("");
   }
 
  /**************************************************************************/
@@ -144,7 +157,7 @@
      lastMode = manual; n = 500;
    }
   
-   Serial.print("mode: "); Serial.println(manual);
+   Serial.print("mode: "); if(manual){Serial.println("manual  ");} else{Serial.println("auto    ");} 
   
    while (manual) {
    joystick();}
@@ -160,7 +173,7 @@
      sum_steps();
      lastMode = manual; n = 1000;
     }
-    Serial.print("netSteps: "); Serial.println(netSteps);
+    //Serial.print("netSteps: "); Serial.println(netSteps);
   }
 
  /**************************************************************************/
@@ -197,24 +210,24 @@
  void motors_on_off () {
    
    motorsOn = digitalRead(powerToMotors);
-   Serial.print("Motor check!");
-   Serial.print(" last: " + lastMotorsOn);
-   Serial.println(" current: " + motorsOn);
    boolean isChanged = (lastMotorsOn != motorsOn);
+   
    if(isChanged) {
      if (!motorsOn) {
        // If the power supply to the motors has just been switched off
        // save the netSteps value at the instant the switch is pressed.
        saveNetSteps = netSteps;
        lastMotorsOn = motorsOn;
-       Serial.print("The switch has flipped, netSteps is saved as: "); Serial.print(netSteps);
+       feedback_on = false;
+       Serial.print("The switch has flipped, netSteps is saved as: "); Serial.println(netSteps);
      }
      else {
        // If the power supply to the motors has just been switched on, 
        // set netSteps equal to the value it had when the power was turned off.
        netSteps = saveNetSteps;
        lastMotorsOn = motorsOn;
-       Serial.print("The switch has flipped, netSteps has been restored to: "); Serial.print(netSteps);
+       feedback_on = true;
+       Serial.print("The switch has flipped, netSteps has been restored to: "); Serial.println(netSteps);
      }
    }
    

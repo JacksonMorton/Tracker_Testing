@@ -2,12 +2,17 @@
 void program4() {
   
   Serial.println("Beginning program4...");
+
+  boolean testMode = true;
   
   if(initialCheck) {check_mode();}
-   initialCheck = false;
+    initialCheck = false;
  
-  motorsOn = digitalRead(powerToMotors);
-  Serial.print("The value being read from pin 8 is: "); Serial.println(motorsOn); Serial.println("");
+  
+ 
+  for (u=0; u<2; u++) {
+    entry(rand_x,rand_y,rand_a,standard);}
+    center(standard);
   
   delay(500);
   
